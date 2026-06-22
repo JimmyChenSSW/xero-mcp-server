@@ -22,6 +22,15 @@ async function fetchEmployeeLeave({ employeeId }: FetchEmployeeLeaveParams): Pro
     throw new Error("Employee ID is required to fetch employee leave");
   }
 
+  // Validate as a GUID before interpolating into the Xero where-clause filter.
+  // A strict GUID cannot contain the filter language's metacharacters
+  // (" ( ) = ! |), which closes any filter/query injection vector.
+  const guidPattern =
+    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+  if (!guidPattern.test(employeeId)) {
+    throw new Error("Invalid employee ID: expected a GUID");
+  }
+
   const where = `EmployeeID==Guid("${employeeId}")`;
   const allApplications: LeaveApplication[] = [];
   let currentPage = 1;
