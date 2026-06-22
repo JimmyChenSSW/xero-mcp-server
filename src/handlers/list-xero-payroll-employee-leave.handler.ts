@@ -2,8 +2,7 @@ import { xeroClient } from "../clients/xero-client.js";
 import { XeroClientResponse } from "../types/tool-response.js";
 import { formatError } from "../helpers/format-error.js";
 import { getClientHeaders } from "../helpers/get-client-headers.js";
-// Import the correct types - using the proper namespace
-import { EmployeeLeave } from "xero-node/dist/gen/model/payroll-nz/employeeLeave.js";
+import { LeaveApplication } from "xero-node/dist/gen/model/payroll-au/leaveApplication.js";
 
 interface FetchEmployeeLeaveParams {
   employeeId?: string;
@@ -11,23 +10,42 @@ interface FetchEmployeeLeaveParams {
 
 /**
  * Internal function to fetch employee leave from Xero
+ *
+ * AU Payroll (1.0) has no per-employee leave endpoint. Query leave
+ * applications filtered server-side to this employee (auto-paginating in case
+ * the employee has more than one page of applications).
  */
-async function fetchEmployeeLeave({ employeeId }: FetchEmployeeLeaveParams): Promise<EmployeeLeave[] | null> {
+async function fetchEmployeeLeave({ employeeId }: FetchEmployeeLeaveParams): Promise<LeaveApplication[] | null> {
   await xeroClient.authenticate();
 
   if (!employeeId) {
     throw new Error("Employee ID is required to fetch employee leave");
   }
 
-  const response = await xeroClient.payrollNZApi.getEmployeeLeaves(
-    xeroClient.tenantId,
-    employeeId,
-    {
-      headers: getClientHeaders().headers
-    }
-  );
+  const where = `EmployeeID==Guid("${employeeId}")`;
+  const allApplications: LeaveApplication[] = [];
+  let currentPage = 1;
 
-  return response.body.leave ?? null;
+  while (true) {
+    const response = await xeroClient.payrollAUApi.getLeaveApplications(
+      xeroClient.tenantId,
+      undefined, // ifModifiedSince
+      where,
+      undefined, // order
+      currentPage,
+      getClientHeaders(),
+    );
+
+    const applications = response.body.leaveApplications ?? [];
+    allApplications.push(...applications);
+
+    if (applications.length < 100) {
+      break;
+    }
+    currentPage++;
+  }
+
+  return allApplications;
 }
 
 /**
@@ -36,7 +54,7 @@ async function fetchEmployeeLeave({ employeeId }: FetchEmployeeLeaveParams): Pro
  */
 export async function listXeroPayrollEmployeeLeave(
   employeeId: string,
-): Promise<XeroClientResponse<EmployeeLeave[]>> {
+): Promise<XeroClientResponse<LeaveApplication[]>> {
   try {
     const leave = await fetchEmployeeLeave({ employeeId });
 

@@ -2,25 +2,28 @@ import { xeroClient } from "../clients/xero-client.js";
 import { XeroClientResponse } from "../types/tool-response.js";
 import { formatError } from "../helpers/format-error.js";
 import { getClientHeaders } from "../helpers/get-client-headers.js";
-import { EmployeeLeaveBalance } from "xero-node/dist/gen/model/payroll-nz/employeeLeaveBalance.js";
+import { LeaveBalance } from "xero-node/dist/gen/model/payroll-au/leaveBalance.js";
 
 /**
  * Internal function to fetch employee leave balances from Xero
+ *
+ * AU Payroll (1.0) has no dedicated leave-balances endpoint; balances are
+ * returned embedded on the Employee object.
  */
-async function fetchEmployeeLeaveBalances(employeeId: string): Promise<EmployeeLeaveBalance[] | null> {
+async function fetchEmployeeLeaveBalances(employeeId: string): Promise<LeaveBalance[] | null> {
   await xeroClient.authenticate();
 
   if (!employeeId) {
     throw new Error("Employee ID is required to fetch employee leave balances");
   }
 
-  const response = await xeroClient.payrollNZApi.getEmployeeLeaveBalances(
+  const response = await xeroClient.payrollAUApi.getEmployee(
     xeroClient.tenantId,
     employeeId,
     getClientHeaders(),
   );
 
-  return response.body.leaveBalances ?? null;
+  return response.body.employees?.[0]?.leaveBalances ?? null;
 }
 
 /**
@@ -29,7 +32,7 @@ async function fetchEmployeeLeaveBalances(employeeId: string): Promise<EmployeeL
  */
 export async function listXeroPayrollEmployeeLeaveBalances(
   employeeId: string,
-): Promise<XeroClientResponse<EmployeeLeaveBalance[]>> {
+): Promise<XeroClientResponse<LeaveBalance[]>> {
   try {
     const leaveBalances = await fetchEmployeeLeaveBalances(employeeId);
 

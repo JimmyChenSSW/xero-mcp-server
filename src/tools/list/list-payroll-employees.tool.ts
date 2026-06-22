@@ -1,4 +1,4 @@
-import { Employee } from "xero-node/dist/gen/model/payroll-nz/employee.js";
+import { Employee } from "xero-node/dist/gen/model/payroll-au/employee.js";
 import { listXeroPayrollEmployees } from "../../handlers/list-xero-payroll-employees.handler.js";
 import { CreateXeroTool } from "../../helpers/create-xero-tool.js";
 import { z } from "zod";
@@ -41,11 +41,13 @@ If they want the next page, call this tool again with the next page number.`,
             `Employee: ${employee.employeeID}`,
             employee.email ? `Email: ${employee.email}` : "No email",
             employee.gender ? `Gender: ${employee.gender}` : null,
-            employee.phoneNumber ? `Phone: ${employee.phoneNumber}` : null,
+            employee.phone ? `Phone: ${employee.phone}` : null,
+            employee.mobile ? `Mobile: ${employee.mobile}` : null,
             employee.startDate ? `Start Date: ${employee.startDate}` : null,
-            employee.engagementType
-              ? `Engagement Type: ${employee.engagementType}`
-              : "No status", // Permanent, FixedTerm, Casual
+            employee.employmentType
+              ? `Employment Type: ${employee.employmentType}`
+              : "No status", // FullTime, PartTime, Casual, etc.
+            employee.status ? `Status: ${employee.status}` : null,
             employee.title ? `Title: ${employee.title}` : null,
             employee.firstName ? `First Name: ${employee.firstName}` : null,
             employee.lastName ? `Last Name: ${employee.lastName}` : null,

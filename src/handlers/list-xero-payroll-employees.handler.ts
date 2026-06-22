@@ -2,16 +2,18 @@ import { xeroClient } from "../clients/xero-client.js";
 import { XeroClientResponse } from "../types/tool-response.js";
 import { formatError } from "../helpers/format-error.js";
 import { getClientHeaders } from "../helpers/get-client-headers.js";
-import { Employee } from "xero-node/dist/gen/model/payroll-nz/employee.js";
+import { Employee } from "xero-node/dist/gen/model/payroll-au/employee.js";
 
 async function getPayrollEmployees(page?: number): Promise<Employee[]> {
   await xeroClient.authenticate();
 
   if (page !== undefined) {
     // Fetch a specific page
-    const employees = await xeroClient.payrollNZApi.getEmployees(
+    const employees = await xeroClient.payrollAUApi.getEmployees(
       xeroClient.tenantId,
-      undefined, // filter
+      undefined, // ifModifiedSince
+      undefined, // where
+      undefined, // order
       page,
       getClientHeaders(),
     );
@@ -23,9 +25,11 @@ async function getPayrollEmployees(page?: number): Promise<Employee[]> {
   let currentPage = 1;
 
   while (true) {
-    const response = await xeroClient.payrollNZApi.getEmployees(
+    const response = await xeroClient.payrollAUApi.getEmployees(
       xeroClient.tenantId,
-      undefined, // filter
+      undefined, // ifModifiedSince
+      undefined, // where
+      undefined, // order
       currentPage,
       getClientHeaders(),
     );

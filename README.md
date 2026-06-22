@@ -32,7 +32,7 @@ If you don't already have a Xero account and organisation already, can create on
 
 We recommend using a Demo Company to start with because it comes with some pre-loaded sample data. Once you are logged in, switch to it by using the top left-hand dropdown and selecting "Demo Company". You can reset the data on a Demo Company, or change the country, at any time by using the top left-hand dropdown and navigating to [My Xero](https://my.xero.com).
 
-NOTE: To use Payroll-specific queries, the region should be either NZ or UK.
+NOTE: This fork targets **Australian (AU) Payroll** only. Payroll tools call the Xero AU Payroll API (`payroll.xro/1.0`) and will not work against NZ or UK organisations.
 
 ### Authentication
 
@@ -152,12 +152,10 @@ payroll.timesheets
 - `list-bank-transactions`: Retrieve a list of bank account transactions
 - `list-payroll-employees`: Retrieve a list of Payroll Employees
 - `list-report-balance-sheet`: Retrieve a balance sheet report
-- `list-payroll-employee-leave`: Retrieve a Payroll Employee's leave records
+- `list-payroll-employee-leave`: Retrieve a Payroll Employee's leave records (AU leave applications)
 - `list-payroll-employee-leave-balances`: Retrieve a Payroll Employee's leave balances
-- `list-payroll-employee-leave-types`: Retrieve a list of Payroll leave types
-- `list-payroll-leave-periods`: Retrieve a list of a Payroll Employee's leave periods
+- `list-payroll-employee-leave-types`: Retrieve the leave types assigned to a Payroll Employee
 - `list-payroll-leave-types`: Retrieve a list of all available leave types in Xero Payroll
-- `list-timesheets`: Retrieve a list of Payroll Timesheets
 - `list-aged-receivables-by-contact`: Retrieves aged receivables for a contact
 - `list-aged-payables-by-contact`: Retrieves aged payables for a contact
 - `list-contact-groups`: Retrieve a list of contact groups
@@ -170,7 +168,6 @@ payroll.timesheets
 - `create-manual-journal`: Create a new manual journal
 - `create-payment`: Create a new payment
 - `create-quote`: Create a new quote
-- `create-payroll-timesheet`: Create a new Payroll Timesheet
 - `create-tracking-category`: Create a new tracking category
 - `create-tracking-option`: Create a new tracking option
 - `update-bank-transaction`: Update an existing bank transaction
@@ -182,12 +179,6 @@ payroll.timesheets
 - `update-credit-note`: Update an existing draft credit note
 - `update-tracking-category`: Update an existing tracking category
 - `update-tracking-options`: Update tracking options
-- `update-payroll-timesheet-line`: Update a line on an existing Payroll Timesheet
-- `approve-payroll-timesheet`: Approve a Payroll Timesheet
-- `revert-payroll-timesheet`: Revert an approved Payroll Timesheet
-- `add-payroll-timesheet-line`: Add new line on an existing Payroll Timesheet
-- `delete-payroll-timesheet`: Delete an existing Payroll Timesheet
-- `get-payroll-timesheet`: Retrieve an existing Payroll Timesheet
 
 For detailed API documentation, please refer to the [MCP Protocol Specification](https://modelcontextprotocol.io/).
 

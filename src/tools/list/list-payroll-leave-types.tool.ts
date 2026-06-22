@@ -1,6 +1,6 @@
 import { listXeroPayrollLeaveTypes } from "../../handlers/list-xero-payroll-leave-types.handler.js";
 import { CreateXeroTool } from "../../helpers/create-xero-tool.js";
-import { LeaveType } from "xero-node/dist/gen/model/payroll-nz/leaveType.js";
+import { LeaveType } from "xero-node/dist/gen/model/payroll-au/leaveType.js";
 
 const ListPayrollLeaveTypesTool = CreateXeroTool(
   "list-payroll-leave-types",
@@ -33,9 +33,8 @@ const ListPayrollLeaveTypesTool = CreateXeroTool(
             `Leave Type ID: ${leaveType.leaveTypeID || "Unknown"}`,
             leaveType.isPaidLeave !== undefined ? `Is Paid Leave: ${leaveType.isPaidLeave ? 'Yes' : 'No'}` : null,
             leaveType.showOnPayslip !== undefined ? `Show On Payslip: ${leaveType.showOnPayslip ? 'Yes' : 'No'}` : null,
-            leaveType.isActive !== undefined ? `Is Active: ${leaveType.isActive ? 'Yes' : 'No'}` : null,
+            leaveType.currentRecord !== undefined ? `Is Active: ${leaveType.currentRecord ? 'Yes' : 'No'}` : null,
             leaveType.typeOfUnits ? `Type Of Units: ${leaveType.typeOfUnits}` : null,
-            leaveType.typeOfUnitsToAccrue ? `Type Of Units To Accrue: ${leaveType.typeOfUnitsToAccrue}` : null,
             leaveType.updatedDateUTC ? `Last Updated: ${leaveType.updatedDateUTC}` : null,
           ]
             .filter(Boolean)

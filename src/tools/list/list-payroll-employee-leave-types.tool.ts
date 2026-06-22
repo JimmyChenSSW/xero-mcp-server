@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { listXeroPayrollEmployeeLeaveTypes } from "../../handlers/list-xero-payroll-employee-leave-types.handler.js";
 import { CreateXeroTool } from "../../helpers/create-xero-tool.js";
-import { EmployeeLeaveType } from "xero-node/dist/gen/model/payroll-nz/employeeLeaveType.js";
+import { LeaveLine } from "xero-node/dist/gen/model/payroll-au/leaveLine.js";
 
 const ListPayrollEmployeeLeaveTypesTool = CreateXeroTool(
   "list-payroll-employee-leave-types",
@@ -32,28 +32,21 @@ const ListPayrollEmployeeLeaveTypesTool = CreateXeroTool(
           type: "text" as const,
           text: `Found ${leaveTypes?.length || 0} leave types for employee ${employeeId}:`,
         },
-        ...(leaveTypes?.map((leaveType: EmployeeLeaveType) => ({
+        ...(leaveTypes?.map((leaveLine: LeaveLine) => ({
           type: "text" as const,
           text: [
-            `Leave Type ID: ${leaveType.leaveTypeID || "Unknown"}`,
-            `Schedule of Accrual: ${leaveType.scheduleOfAccrual || "Unknown"}`,
-            leaveType.hoursAccruedAnnually
-              ? `Hours Accrued Annually: ${leaveType.hoursAccruedAnnually}`
+            `Leave Type ID: ${leaveLine.leaveTypeID || "Unknown"}`,
+            leaveLine.calculationType
+              ? `Calculation Type: ${leaveLine.calculationType}`
               : null,
-            leaveType.maximumToAccrue
-              ? `Maximum To Accrue: ${leaveType.maximumToAccrue}`
+            leaveLine.numberOfUnits != null
+              ? `Number Of Units: ${leaveLine.numberOfUnits}`
               : null,
-            leaveType.openingBalance
-              ? `Opening Balance: ${leaveType.openingBalance}`
+            leaveLine.annualNumberOfUnits != null
+              ? `Annual Number Of Units: ${leaveLine.annualNumberOfUnits}`
               : null,
-            leaveType.rateAccruedHourly
-              ? `Rate Accrued Hourly: ${leaveType.rateAccruedHourly}`
-              : null,
-            leaveType.leaveTypeID
-              ? `Leave Type ID: ${leaveType.leaveTypeID}`
-              : null,
-            leaveType.scheduleOfAccrualDate
-              ? `Accrual Date: ${leaveType.scheduleOfAccrualDate}`
+            leaveLine.fullTimeNumberOfUnitsPerPeriod != null
+              ? `Full-time Units Per Period: ${leaveLine.fullTimeNumberOfUnitsPerPeriod}`
               : null,
           ]
             .filter(Boolean)

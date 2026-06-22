@@ -2,25 +2,29 @@ import { xeroClient } from "../clients/xero-client.js";
 import { XeroClientResponse } from "../types/tool-response.js";
 import { formatError } from "../helpers/format-error.js";
 import { getClientHeaders } from "../helpers/get-client-headers.js";
-import { EmployeeLeaveType } from "xero-node/dist/gen/model/payroll-nz/employeeLeaveType.js";
+import { LeaveLine } from "xero-node/dist/gen/model/payroll-au/leaveLine.js";
 
 /**
  * Internal function to fetch employee leave types from Xero
+ *
+ * AU Payroll (1.0) has no dedicated employee-leave-types endpoint; the leave
+ * types assigned to an employee are returned as the leave lines on the
+ * employee's pay template.
  */
-async function fetchEmployeeLeaveTypes(employeeId: string): Promise<EmployeeLeaveType[] | null> {
+async function fetchEmployeeLeaveTypes(employeeId: string): Promise<LeaveLine[] | null> {
   await xeroClient.authenticate();
 
   if (!employeeId) {
     throw new Error("Employee ID is required to fetch employee leave types");
   }
 
-  const response = await xeroClient.payrollNZApi.getEmployeeLeaveTypes(
+  const response = await xeroClient.payrollAUApi.getEmployee(
     xeroClient.tenantId,
     employeeId,
     getClientHeaders(),
   );
 
-  return response.body.leaveTypes ?? null;
+  return response.body.employees?.[0]?.payTemplate?.leaveLines ?? null;
 }
 
 /**
@@ -29,7 +33,7 @@ async function fetchEmployeeLeaveTypes(employeeId: string): Promise<EmployeeLeav
  */
 export async function listXeroPayrollEmployeeLeaveTypes(
   employeeId: string,
-): Promise<XeroClientResponse<EmployeeLeaveType[]>> {
+): Promise<XeroClientResponse<LeaveLine[]>> {
   try {
     const leaveTypes = await fetchEmployeeLeaveTypes(employeeId);
 
