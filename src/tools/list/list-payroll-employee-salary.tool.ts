@@ -1,6 +1,8 @@
-import { EarningsLine } from "xero-node/dist/gen/model/payroll-au/earningsLine.js";
-import { DeductionLine } from "xero-node/dist/gen/model/payroll-au/deductionLine.js";
-import { SuperLine } from "xero-node/dist/gen/model/payroll-au/superLine.js";
+import {
+  DeductionLine,
+  EarningsLine,
+  SuperLine,
+} from "../../types/payroll-au-types.js";
 import { listXeroPayrollEmployeeSalary } from "../../handlers/list-xero-payroll-employee-salary.handler.js";
 import { CreateXeroTool } from "../../helpers/create-xero-tool.js";
 import { z } from "zod";

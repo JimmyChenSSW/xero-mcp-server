@@ -2,7 +2,7 @@ import { xeroClient } from "../clients/xero-client.js";
 import { XeroClientResponse } from "../types/tool-response.js";
 import { formatError } from "../helpers/format-error.js";
 import { getClientHeaders } from "../helpers/get-client-headers.js";
-import { LeaveApplication } from "xero-node/dist/gen/model/payroll-au/leaveApplication.js";
+import { LeaveApplication } from "../types/payroll-au-types.js";
 
 interface FetchEmployeeLeaveParams {
   employeeId?: string;

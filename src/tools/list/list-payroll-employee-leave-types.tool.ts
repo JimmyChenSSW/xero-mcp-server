@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { listXeroPayrollEmployeeLeaveTypes } from "../../handlers/list-xero-payroll-employee-leave-types.handler.js";
 import { CreateXeroTool } from "../../helpers/create-xero-tool.js";
-import { LeaveLine } from "xero-node/dist/gen/model/payroll-au/leaveLine.js";
+import { LeaveLine } from "../../types/payroll-au-types.js";
 
 const ListPayrollEmployeeLeaveTypesTool = CreateXeroTool(
   "list-payroll-employee-leave-types",

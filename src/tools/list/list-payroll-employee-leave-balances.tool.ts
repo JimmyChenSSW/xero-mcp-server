@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { listXeroPayrollEmployeeLeaveBalances } from "../../handlers/list-xero-payroll-employee-leave-balances.handler.js";
 import { CreateXeroTool } from "../../helpers/create-xero-tool.js";
-import { LeaveBalance } from "xero-node/dist/gen/model/payroll-au/leaveBalance.js";
+import { LeaveBalance } from "../../types/payroll-au-types.js";
 
 const ListPayrollEmployeeLeaveBalancesTool = CreateXeroTool(
   "list-payroll-employee-leave-balances",
